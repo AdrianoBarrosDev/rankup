@@ -1,7 +1,11 @@
 package com.rankup.system;
 
+import com.rankup.controller.LoginController;
 import com.rankup.controller.UsuarioController;
 import com.rankup.dto.CadastroUsuarioDto;
+import com.rankup.dto.LoginDto;
+import com.rankup.dto.UsuarioDto;
+import com.rankup.sql.Banco;
 import com.rankup.util.JsonMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -9,10 +13,13 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.List;
 
 public class IniciarSistema {
 
     public void start() throws IOException {
+
+        Banco.inicializar();
 
         HttpServer server = HttpServer.create(
                 new InetSocketAddress(8080),
@@ -58,6 +65,71 @@ public class IniciarSistema {
                 sendResponse(exchange, 200, response);
             } catch (Exception e) {
                 sendResponse(exchange, 400, "Erro ao processar JSON: " + e.getMessage());
+            }
+
+        });
+
+        server.createContext("/usuarios", exchange -> {
+
+            String method = exchange.getRequestMethod();
+
+            if (!"GET".equalsIgnoreCase(method)) {
+                sendResponse(exchange, 405, "Method Not Allowed");
+                return;
+            }
+
+            try {
+
+                List<UsuarioDto> listarUsuarios = usuarioController.listarUsuarios();
+
+                String response = JsonMapper.toJson(listarUsuarios);
+
+                exchange.getResponseHeaders()
+                        .set("Content-Type", "application/json; charset=UTF-8");
+
+                sendResponse(exchange, 200, response);
+
+            } catch (Exception e) {
+
+                sendResponse(exchange, 500, "Erro ao listar usuários");
+            }
+
+        });
+
+        server.createContext("/login", exchange -> {
+
+            String method = exchange.getRequestMethod();
+
+            if (!"POST".equalsIgnoreCase(method)) {
+                sendResponse(exchange, 405, "Method Not Allowed");
+                return;
+            }
+
+            try {
+
+                String body = new String(
+                        exchange.getRequestBody().readAllBytes(),
+                        java.nio.charset.StandardCharsets.UTF_8
+                );
+
+                // JSON -> DTO
+                LoginDto dto = JsonMapper.map(
+                        body,
+                        LoginDto.class
+                );
+
+                LoginController loginController = new LoginController();
+                String response = loginController.logar(dto.getUsername(), dto.getSenha());
+                System.out.println("SAIU");
+
+                exchange.getResponseHeaders()
+                        .set("Content-Type", "application/json; charset=UTF-8");
+
+                sendResponse(exchange, 200, response);
+
+            } catch (Exception e) {
+
+                sendResponse(exchange, 500, "Erro ao logar");
             }
 
         });

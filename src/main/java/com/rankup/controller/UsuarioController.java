@@ -1,7 +1,10 @@
 package com.rankup.controller;
 
 import com.rankup.dto.CadastroUsuarioDto;
+import com.rankup.dto.UsuarioDto;
 import com.rankup.service.UsuarioService;
+
+import java.util.List;
 
 public class UsuarioController {
 
@@ -12,4 +15,7 @@ public class UsuarioController {
         return "Usuário criado com sucesso";
     }
 
+    public List<UsuarioDto> listarUsuarios() {
+        return usuarioService.listarUsuarios();
+    }
 }

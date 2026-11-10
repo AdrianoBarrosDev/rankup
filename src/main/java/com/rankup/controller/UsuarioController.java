@@ -8,7 +8,11 @@ import java.util.List;
 
 public class UsuarioController {
 
-    private UsuarioService usuarioService = new UsuarioService();
+    private UsuarioService usuarioService;
+
+    public UsuarioController() {
+        usuarioService = new UsuarioService();
+    }
 
     public String criarUsuario(CadastroUsuarioDto cadastroUsuarioDto) {
         usuarioService.criarUsuario(cadastroUsuarioDto);

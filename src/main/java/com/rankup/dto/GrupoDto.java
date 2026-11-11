@@ -8,19 +8,35 @@ public class GrupoDto {
     private String descricao;
     private UUID codigoUsuarioAdm;
 
-    public GrupoDto() {}
+    public int getCodigo(){
+        return codigo;
+    }
 
-    public int getCodigo(){return codigo;}
+    public void setCodigo(int codigo){
+        this.codigo = codigo;
+    }
 
-    public void setCodigo(int codigo){this.codigo = codigo;}
+    public String getNome(){
+        return nome;
+    }
 
-    public String getNome(){return nome;}
+    public void setNome(String nome){
+        this.nome = nome;
+    }
 
-    public void setNome(String nome){this.nome = nome;}
+    public String getDescricao() {
+        return descricao;
+    }
 
-    public String getDescricao() {return descricao;}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-    public UUID getCodigoUsuarioAdm(){return codigoUsuarioAdm;}
+    public UUID getCodigoUsuarioAdm(){
+        return codigoUsuarioAdm;
+    }
 
-    public void setCodigoUsuarioAdm(UUID codigoUsuarioAdm){this.codigoUsuarioAdm = codigoUsuarioAdm;}
+    public void setCodigoUsuarioAdm(UUID codigoUsuarioAdm){
+        this.codigoUsuarioAdm = codigoUsuarioAdm;
+    }
 }

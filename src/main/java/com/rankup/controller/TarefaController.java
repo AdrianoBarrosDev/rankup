@@ -1,9 +1,6 @@
 package com.rankup.controller;
 
-import com.rankup.dto.GrupoDto;
 import com.rankup.dto.TarefaDto;
-import com.rankup.dto.UsuarioGrupoDto;
-import com.rankup.service.GrupoService;
 import com.rankup.service.TarefaService;
 
 import java.util.List;

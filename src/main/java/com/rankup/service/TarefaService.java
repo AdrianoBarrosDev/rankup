@@ -1,7 +1,5 @@
 package com.rankup.service;
 
-import com.rankup.dao.GrupoDao;
-import com.rankup.dto.GrupoDto;
 import com.rankup.dto.TarefaDto;
 import com.rankup.dao.TarefaDao;
 

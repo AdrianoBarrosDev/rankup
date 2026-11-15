@@ -2,6 +2,7 @@ package com.rankup.system;
 
 import com.rankup.controller.GrupoController;
 import com.rankup.controller.LoginController;
+import com.rankup.controller.TarefaController;
 import com.rankup.controller.UsuarioController;
 import com.rankup.dto.*;
 import com.rankup.sql.Banco;
@@ -242,6 +243,28 @@ public class IniciarSistema {
             }
 
         });
+
+        server.createContext("/tarefas", exchange -> {
+            String method = exchange.getRequestMethod();
+
+            if(!"GET".equalsIgnoreCase(method)) {
+                sendResponse(exchange, 405, "Method Not Allowed");
+                return;
+            }
+
+            try {
+
+                TarefaController tarefaController = new TarefaController();
+                List<TarefaDto> listaTarefas = tarefaController.listarTarefas();
+                String response = JsonMapper.toJson(listaTarefas);
+                sendResponse(exchange, 200, response);
+
+            } catch (Exception e) {
+                sendResponse(exchange, 400, "Erro ao processar JSON: " + e.getMessage());
+            }
+
+        });
+
 
         server.setExecutor(null);
         server.start();

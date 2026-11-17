@@ -91,7 +91,7 @@ public class GrupoDao extends Dao {
         Connection connection = null;
         try {
             connection = this.conectar();
-            String sql = "insert into grupo_usuario(cd_grupo, cd_usuario, isAdm) VALUES (?, ?, ?)";
+            String sql = "insert into grupo_usuario(cd_grupo, cd_usuario, is_adm) VALUES (?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 

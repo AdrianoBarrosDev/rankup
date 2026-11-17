@@ -11,6 +11,10 @@ public class TarefaService {
 
     private TarefaDao tarefaDao;
 
+    public TarefaService() {
+        this.tarefaDao = new TarefaDao();
+    }
+
     public void criarTarefa(TarefaDto tarefaDto){
         try {
             tarefaDao.criarTarefa(tarefaDto);

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JsonMapper {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new CustomObjectMapper();
 
     public static <T> T map(String json, Class<T> clazz) throws Exception {
         return mapper.readValue(json, clazz);

@@ -1,13 +1,14 @@
 package com.rankup.dto;
 
-import java.util.Date;
+
+import java.time.LocalDate;
 
 public class TarefaDto {
     private int codigo;
     private int codigoGrupo;
     private String descricao;
-    private Date dataCriacao;
-    private Date dataLimite;
+    private LocalDate dataCriacao;
+    private LocalDate dataLimite;
     private boolean possuiRepeticao;
 
     public int getCodigo(){
@@ -34,19 +35,27 @@ public class TarefaDto {
         this.descricao = descricao;
     }
 
-    public Date getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(Date dataCriacao) {
+    public void setDataCriacao(String dataCriacao) {
+        this.dataCriacao = LocalDate.parse(dataCriacao);
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public Date getDataLimite() {
+    public LocalDate getDataLimite() {
         return dataLimite;
     }
 
-    public void setDataLimite(Date dataLimite) {
+    public void setDataLimite(String dataLimite) {
+        this.dataLimite = LocalDate.parse(dataLimite);
+    }
+
+    public void setDataLimite(LocalDate dataLimite) {
         this.dataLimite = dataLimite;
     }
 

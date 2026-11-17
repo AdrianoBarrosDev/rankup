@@ -120,7 +120,6 @@ public class IniciarSistema {
 
                 LoginController loginController = new LoginController();
                 String response = loginController.logar(dto.getUsername(), dto.getSenha());
-                System.out.println("SAIU");
 
                 exchange.getResponseHeaders()
                         .set("Content-Type", "application/json; charset=UTF-8");
@@ -236,6 +235,37 @@ public class IniciarSistema {
                 GrupoController grupoController = new GrupoController();
                 List<UsuarioDto> listaUsuarios = grupoController.listarUsuariosGrupo(partes[1]);
                 String response = JsonMapper.toJson(listaUsuarios);
+                sendResponse(exchange, 200, response);
+
+            } catch (Exception e) {
+                sendResponse(exchange, 400, "Erro ao processar JSON: " + e.getMessage());
+            }
+
+        });
+
+        server.createContext("/tarefas/criarTarefa", exchange -> {
+            String method = exchange.getRequestMethod();
+
+            if(!"POST".equalsIgnoreCase(method)) {
+                sendResponse(exchange, 405, "Method Not Allowed");
+                return;
+            }
+
+            try {
+
+                String body = new String(
+                        exchange.getRequestBody().readAllBytes(),
+                        java.nio.charset.StandardCharsets.UTF_8
+                );
+
+                // JSON -> DTO
+                TarefaDto dto = JsonMapper.map(
+                        body,
+                        TarefaDto.class
+                );
+
+                TarefaController tarefaController = new TarefaController();
+                String response = tarefaController.criarTarefa(dto);
                 sendResponse(exchange, 200, response);
 
             } catch (Exception e) {

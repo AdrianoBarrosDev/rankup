@@ -6,9 +6,21 @@ import java.sql.Statement;
 
 public class Banco {
 
+    public static final String CREATE_TABLE_TAREFA = """
+            CREATE TABLE IF NOT EXISTS tarefa (
+                rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+                cd_grupo INTEGER NOT NULL,
+                descricao VARCHAR(200) NOT NULL,
+                dt_criacao DATE NOT NULL,
+                dt_limite DATE NOT NULL,
+                possuiRepeticao BIT DEFAULT 0 NOT NULL
+            );
+            """;
+
     public static void inicializar() {
         criarTabelaUsuario();
         criarTebelasGrupo();
+        criarTabelaTarefa();
     }
     public static void criarTabelaUsuario() {
 
@@ -75,6 +87,19 @@ public class Banco {
             stmt.execute(convite);
 
             System.out.println("Tabelas de grupo criadas!");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void criarTabelaTarefa() {
+
+        Dao dao = new Dao();
+        try (Connection conexao = dao.conectar();
+             Statement stmt = conexao.createStatement()) {
+
+            stmt.execute(CREATE_TABLE_TAREFA);
+            System.out.println("Tabela de tarefa criada!");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

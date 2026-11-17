@@ -14,15 +14,16 @@ public class TarefaDao extends Dao {
         Connection connection = null;
         try {
             connection = this.conectar();
-            String sql = "insert into tarefa(cd_grupo, descricao, dt_criacao, dt_limite) VALUES (?, ?, ?, ?)";
+            String sql = "insert into tarefa(cd_grupo, descricao, dt_criacao, dt_limite, possuiRepeticao) VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             int i = 1;
             ps.setInt(i++, tarefa.getCodigoGrupo());
             ps.setString(i++, tarefa.getDescricao());
-            ps.setDate(i++, (Date) tarefa.getDataCriacao());
-            ps.setDate(i++, (Date) tarefa.getDataLimite());
+            ps.setDate(i++, Date.valueOf(tarefa.getDataCriacao()));
+            ps.setDate(i++, Date.valueOf(tarefa.getDataLimite()));
+            ps.setBoolean(i++, tarefa.getPossuiRepeticao());
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
@@ -33,8 +34,6 @@ public class TarefaDao extends Dao {
             ps.close();
 
             System.out.println("Tarefa gravada no banco");
-
-
 
         } catch (Exception e) {
             if (connection != null) connection.rollback();
@@ -60,8 +59,8 @@ public class TarefaDao extends Dao {
                 TarefaDto tarefa = new TarefaDto();
                 tarefa.setCodigo(rs.getInt("cd_grupo"));
                 tarefa.setDescricao(rs.getString("descricao"));
-                tarefa.setDataCriacao(rs.getDate("dt_ciacao"));
-                tarefa.setDataCriacao(rs.getDate("dt_limite"));
+                tarefa.setDataCriacao(rs.getDate("dt_criacao").toLocalDate());
+                tarefa.setDataCriacao(rs.getDate("dt_limite").toLocalDate());
 
                 listaTarefas.add(tarefa);
             }

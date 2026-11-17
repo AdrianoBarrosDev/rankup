@@ -96,7 +96,7 @@ public class GrupoRouter extends BaseRouter {
         server.createContext("/grupos/", exchange -> {
             String method = exchange.getRequestMethod();
 
-            if(!"POST".equalsIgnoreCase(method)) {
+            if(!"GET".equalsIgnoreCase(method)) {
                 sendResponse(exchange, 405, "Method Not Allowed");
                 return;
             }
@@ -114,7 +114,7 @@ public class GrupoRouter extends BaseRouter {
                 }
 
                 GrupoController grupoController = new GrupoController();
-                List<UsuarioDto> listaUsuarios = grupoController.listarUsuariosGrupo(partes[1]);
+                List<UsuarioDto> listaUsuarios = grupoController.listarUsuariosGrupo(partes[2]);
                 String response = JsonMapper.toJson(listaUsuarios);
                 sendResponse(exchange, 200, response);
 

@@ -1,5 +1,6 @@
 package com.rankup.controller;
 
+import com.rankup.dto.ConclusaoTarefaDto;
 import com.rankup.dto.TarefaDto;
 import com.rankup.service.TarefaService;
 
@@ -15,10 +16,16 @@ public class TarefaController {
 
     public String criarTarefa(TarefaDto tarefaDto){
         tarefaService.criarTarefa(tarefaDto);
+        tarefaService.atribuirTarefaAosUsuariosDoGrupo(tarefaDto.getCodigoGrupo(), tarefaDto.getCodigo());
         return "tarefa criada com sucesso!";
     }
 
     public List<TarefaDto> listarTarefas(){
         return tarefaService.listarTarefas();
+    }
+
+    public String concluirTarefa(ConclusaoTarefaDto conclusaoTarefaDto) {
+        tarefaService.concluirTarefa(conclusaoTarefaDto);
+        return "Tarefa concluída com sucesso!";
     }
 }

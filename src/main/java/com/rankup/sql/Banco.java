@@ -17,17 +17,28 @@ public class Banco {
             );
             """;
 
+    public static final String CREATE_TABLE_TAREFA_USUARIO = """
+            CREATE TABLE IF NOT EXISTS tarefa_usuario (
+                rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+                cd_tarefa INTEGER NOT NULL,
+                cd_usuario TEXT NOT NULL,
+                dt_conclusao DATE NOT NULL,
+                isConcluida BIT DEFAULT 0 NOT NULL,
+                FOREIGN KEY (cd_tarefa) REFERENCES tarefa(rowid),
+                FOREIGN KEY (cd_usuario) REFERENCES usuario(cd_usuario)
+            );
+            """;
+
     public static void inicializar() {
         criarTabelaUsuario();
         criarTebelasGrupo();
-        criarTabelaTarefa();
+        criarTabelasTarefa();
     }
     public static void criarTabelaUsuario() {
 
         String sql = """
             CREATE TABLE IF NOT EXISTS usuario (
-                rowid INTEGER PRIMARY KEY AUTOINCREMENT,
-                cd_usuario TEXT NOT NULL UNIQUE,
+                cd_usuario TEXT PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
                 username TEXT NOT NULL UNIQUE,
                 senha TEXT NOT NULL
@@ -92,14 +103,15 @@ public class Banco {
             throw new RuntimeException(e);
         }
     }
-    public static void criarTabelaTarefa() {
+    public static void criarTabelasTarefa() {
 
         Dao dao = new Dao();
         try (Connection conexao = dao.conectar();
              Statement stmt = conexao.createStatement()) {
 
             stmt.execute(CREATE_TABLE_TAREFA);
-            System.out.println("Tabela de tarefa criada!");
+            stmt.execute(CREATE_TABLE_TAREFA_USUARIO);
+            System.out.println("Tabelas de tarefas criadas!");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

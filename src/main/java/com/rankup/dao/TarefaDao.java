@@ -1,6 +1,8 @@
 package com.rankup.dao;
 
+import com.rankup.dto.ConclusaoTarefaDto;
 import com.rankup.dto.TarefaDto;
+import com.rankup.dto.UsuarioDto;
 import com.rankup.sql.Dao;
 
 import java.sql.*;
@@ -57,7 +59,8 @@ public class TarefaDao extends Dao {
 
             while (rs.next()) {
                 TarefaDto tarefa = new TarefaDto();
-                tarefa.setCodigo(rs.getInt("cd_grupo"));
+                tarefa.setCodigo(rs.getInt("rowid"));
+                tarefa.setCodigoGrupo(rs.getInt("cd_grupo"));
                 tarefa.setDescricao(rs.getString("descricao"));
                 tarefa.setDataCriacao(rs.getDate("dt_criacao").toLocalDate());
                 tarefa.setDataCriacao(rs.getDate("dt_limite").toLocalDate());
@@ -74,6 +77,42 @@ public class TarefaDao extends Dao {
             this.fecharConexao();
         }
         return listaTarefas;
+    }
+
+    public void concluirTarefa(ConclusaoTarefaDto conclusaoTarefaDto) throws SQLException {
+
+        Connection connection = this.conectar();
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE tarefa_usuario ")
+                .append("SET isConcluida = ?, dt_conclusao = ? ")
+                .append("WHERE cd_usuario = ? AND cd_tarefa = ? ");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            ps.executeUpdate();
+        } catch (Exception e) {
+            if (connection != null) connection.rollback();
+        } finally {
+            this.fecharConexao();
+        }
+    }
+
+    public void atribuirTarefaAosUsuarios(List<UsuarioDto> listaUsuarios, int codigoTarefa) throws SQLException {
+        Connection connection = this.conectar();
+        for(UsuarioDto usuario : listaUsuarios) {
+            String sql = "INSERT INTO tarefa_usuario(cd_tarefa, cd_usuario) VALUES (?, ?)";
+
+            try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                int i = 1;
+                ps.setInt(i++, codigoTarefa);
+                ps.setString(i++, String.valueOf(usuario.getCodigo()));
+                ps.executeUpdate();
+            } catch (Exception e) {
+                if (connection != null) connection.rollback();
+            } finally {
+                this.fecharConexao();
+            }
+        }
+
     }
 
 }
